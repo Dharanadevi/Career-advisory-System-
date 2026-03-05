@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FiGrid, FiUsers, FiBriefcase, FiTrendingUp, FiTrash2, FiActivity, 
+import { FiGrid, FiUsers, FiBriefcase, FiTrendingUp, FiTrash2, FiActivity, 
   FiClock, FiX, FiPlus, FiDownload, FiSearch, FiMail, FiStar 
 } from 'react-icons/fi';
 
