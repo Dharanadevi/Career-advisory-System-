@@ -39,8 +39,8 @@ const AdminDashboard = () => {
 
   // --- 3. BUSINESS LOGIC (Matching & Analytics) ---
   const getDeptStats = () => {
-    const depts = ['CSE', 'ECE', 'MECH'];
-    return depts.map(dept => {
+    const dept = ['CSE', 'ECE', 'MECH'];
+    return dept.map(dept => {
       const students = usersList.filter(u => u.department === dept);
       const placed = students.filter(u => u.placed).length;
       const total = students.length;
