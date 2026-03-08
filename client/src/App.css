@@ -1,44 +1,76 @@
-/* Apply background to the entire page */
+/* 1. The Global Canvas */
 body {
-  margin: 100px;
-  padding: 10;
-  /* Option: Clean professional office background with a soft white overlay */
-  background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
-              url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=2000');
+  margin: 0; /* Changed from 100px to 0 to prevent white gaps at edges */
+  padding: 0;
+  /* Dark Midnight Background with a subtle tech pattern overlay */
+  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9), #020617), 
+              url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
   
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed; /* Keeps the image from moving when you scroll */
+  background-attachment: fixed;
   min-height: 100vh;
-  font-family: 'times new roman', serif;
-  
+  /* Switched to Sans-Serif for a modern tech feel */
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  color: #f8fafc;
 }
 
-/* Make the App container transparent to show the body background */
+/* 2. Transparent App Container */
 .App {
   background: transparent;
+  padding-top: 80px; /* Space for your navbar */
 }
 
-/* Optional: Make cards look "glassy" on top of the background */
+/* 3. The "Cyber-Glass" Card */
 .card {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: none !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  /* Dark translucent background */
+  background: rgba(30, 41, 59, 0.7) !important; 
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  
+  /* Thin, glowing border */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 24px; /* Smoother, rounder corners */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Optional: Style the buttons to match the professional theme */
+.card:hover {
+  transform: translateY(-10px);
+  /* Glow matches your Sky Blue branding */
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 25px rgba(14, 165, 233, 0.2);
+}
+
+/* 4. Professional Modern Buttons */
 .btn-outline-dark {
-  border-color: #333;
-  color: #333;
+  border: 2px solid #0ea5e9 !important; /* Sky Blue Border */
+  color: #0ea5e9 !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  padding: 10px 24px;
+  background: transparent;
   transition: all 0.3s ease;
-  background-color: transparent;
-
-
 }
+
 .btn-outline-dark:hover {
-  background-color: #150303;
-  color: #fff;
-  border-color: #333;
+  /* Smooth transition to your Purple/Pink theme */
+  background: linear-gradient(90deg, #0ea5e9, #d946ef) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
+  transform: scale(1.05);
 }
 
+/* 5. Input Field Polish */
+input, select, textarea {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+
+input:focus {
+  border-color: #d946ef !important; /* Purple focus glow */
+  box-shadow: 0 0 10px rgba(217, 70, 239, 0.2) !important;
+}

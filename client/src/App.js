@@ -10,16 +10,17 @@ import ProtectedRoute from './components/ProtectedRoutes';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import StudentDashboard from './pages/StudentDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+
+// --- NEW WORKFLOW PAGES ---
+import StudentIdentity from './pages/StudentIdentity'; // Stage 1
+import ProfileView from './pages/ProfileView';         // Stage 2
+import StudentDashboard from './pages/StudentDashboard'; // Stage 3
 
 // 3. Global Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import './components/Navbar.js';
-import './components/Footer.js';
-import'./App.css';
 
 // --- DATA SECTION ---
 const sampleUsers = [
@@ -46,7 +47,29 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login/:role" element={<Login />} />
 
-            {/* Protected Student Route */}
+            {/* --- NEW STUDENT WORKFLOW --- */}
+            
+            {/* STAGE 1: ENTER DETAILS */}
+            <Route 
+              path="/student-identity" 
+              element={
+                <ProtectedRoute allowedRole="student">
+                  <StudentIdentity />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* STAGE 2: DISPLAY DATA (VERIFICATION) */}
+            <Route 
+              path="/view-profile" 
+              element={
+                <ProtectedRoute allowedRole="student">
+                  <ProfileView />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* STAGE 3: FINAL DASHBOARD */}
             <Route 
               path="/student-dashboard" 
               element={
@@ -56,14 +79,15 @@ function App() {
               } 
             />
 
+            {/* --- END STUDENT WORKFLOW --- */}
+
             {/* Protected Staff Route */}
             <Route 
               path="/staff-dashboard" 
               element={
                 <ProtectedRoute allowedRole="staff">
-
-                  <div className = "container mt-5">
-                    <h2 className='fw-bold mb-4'>Staff Dashboard</h2>
+                  <div className="container mt-5">
+                    <h2 className='fw-bold mb-4 logo-place'>Staff Dashboard</h2>
                     <StaffDashboard />
                   </div>
                 </ProtectedRoute>
@@ -81,7 +105,7 @@ function App() {
             />
 
             {/* Fallback Route */}
-            <Route path="/staff-dashboard" element={<Navigate to="/admin-dashboard" />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
 
@@ -92,3 +116,5 @@ function App() {
 }
 
 export default App;
+
+//
