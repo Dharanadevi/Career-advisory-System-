@@ -13,25 +13,22 @@ import Register from './pages/Register';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
-// --- NEW WORKFLOW PAGES ---
-import StudentIdentity from './pages/StudentIdentity'; // Stage 1
-import ProfileView from './pages/ProfileView';         // Stage 2
-import StudentDashboard from './pages/StudentDashboard'; // Stage 3
+// --- THE 3-STEP WORKFLOW PAGES ---
+import StudentIdentity from './pages/StudentIdentity'; // Stage 1 (The Form)
+import ProfileView from './pages/ProfileView';         // Stage 2 (The Display)
+import StudentDashboard from './pages/StudentDashboard'; // Stage 3 (The Dashboard)
 
 // 3. Global Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-// --- DATA SECTION ---
 const sampleUsers = [
   { id: 1, name: "Jane Smith", role: "Staff", email: "jane@company.com" },
   { id: 2, name: "John Doe", role: "Student", email: "john@university.edu" },
-  { id: 3, name: "Alice Johnson", role: "Admin", email: "alice@admin.com" },
 ];
 
 const sampleAppliedJobs = [
   { id: 1, title: "Software Engineer Intern", company: "Tech Corp", status: "Under Review" },
-  { id: 2, title: "Data Analyst Intern", company: "Data Inc.", status: "Interview Scheduled" },
 ];
 
 function App() {
@@ -47,9 +44,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login/:role" element={<Login />} />
 
-            {/* --- NEW STUDENT WORKFLOW --- */}
+            {/* --- STUDENT WORKFLOW ROUTES --- */}
             
-            {/* STAGE 1: ENTER DETAILS */}
+            {/* 1. This is where the student fills the form */}
             <Route 
               path="/student-identity" 
               element={
@@ -59,7 +56,7 @@ function App() {
               } 
             />
 
-            {/* STAGE 2: DISPLAY DATA (VERIFICATION) */}
+            {/* 2. This is where the student goes after clicking SAVE */}
             <Route 
               path="/view-profile" 
               element={
@@ -69,7 +66,7 @@ function App() {
               } 
             />
 
-            {/* STAGE 3: FINAL DASHBOARD */}
+            {/* 3. The final dashboard */}
             <Route 
               path="/student-dashboard" 
               element={
@@ -79,32 +76,15 @@ function App() {
               } 
             />
 
-            {/* --- END STUDENT WORKFLOW --- */}
+            {/* --- OTHER DASHBOARDS --- */}
+            <Route path="/staff-dashboard" element={
+              <ProtectedRoute allowedRole="staff"><StaffDashboard /></ProtectedRoute>
+            } />
+            
+            <Route path="/admin-dashboard" element={
+              <ProtectedRoute allowedRole="admin"><AdminDashboard users={sampleUsers} /></ProtectedRoute>
+            } />
 
-            {/* Protected Staff Route */}
-            <Route 
-              path="/staff-dashboard" 
-              element={
-                <ProtectedRoute allowedRole="staff">
-                  <div className="container mt-5">
-                    <h2 className='fw-bold mb-4 logo-place'>Staff Dashboard</h2>
-                    <StaffDashboard />
-                  </div>
-                </ProtectedRoute>
-              } 
-            />
-
-            {/* Protected Admin Route */}
-            <Route 
-              path="/admin-dashboard" 
-              element={
-                <ProtectedRoute allowedRole="admin">
-                  <AdminDashboard users={sampleUsers} />
-                </ProtectedRoute>
-              } 
-            />
-
-            {/* Fallback Route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
@@ -116,5 +96,3 @@ function App() {
 }
 
 export default App;
-
-//
