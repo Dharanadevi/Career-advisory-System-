@@ -37,7 +37,7 @@ const StudentIdentity = () => {
         return;
       }
 
-      if (file.size > maxSize) {
+      if (file.size < maxSize) {
         // Updated alert message to match the new limit
         alert("File is too large! Please upload a resume below 2MB.");
         e.target.value = null;
