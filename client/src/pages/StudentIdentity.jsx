@@ -4,6 +4,7 @@ import {
   FiSave, FiAward, FiFileText, FiUser, 
   FiGithub, FiCpu, FiUploadCloud, FiBriefcase 
 } from 'react-icons/fi';
+import { FiUploadCloud as FiUploadCloudSolid } from 'react-icons/fi';
 
 const StudentIdentity = () => {
   const navigate = useNavigate();
