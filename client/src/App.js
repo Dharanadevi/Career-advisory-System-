@@ -14,9 +14,9 @@ import StaffDashboard from './pages/StaffDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
 // --- THE 3-STEP WORKFLOW PAGES ---
-import StudentIdentity from './pages/StudentIdentity'; // Stage 1 (The Form)
-import ProfileView from './pages/ProfileView';         // Stage 2 (The Display)
-import StudentDashboard from './pages/StudentDashboard'; // Stage 3 (The Dashboard)
+import StudentIdentity from './pages/StudentIdentity'; 
+import ProfileView from './pages/ProfileView';         
+import StudentDashboard from './pages/StudentDashboard'; 
 
 // 3. Global Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -46,7 +46,7 @@ function App() {
 
             {/* --- STUDENT WORKFLOW ROUTES --- */}
             
-            {/* 1. This is where the student fills the form */}
+            {/* 1. The Form */}
             <Route 
               path="/student-identity" 
               element={
@@ -56,7 +56,7 @@ function App() {
               } 
             />
 
-            {/* 2. This is where the student goes after clicking SAVE */}
+            {/* 2. The Display (MAKE SURE THIS PATH MATCHES YOUR navigate() CALL) */}
             <Route 
               path="/view-profile" 
               element={

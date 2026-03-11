@@ -2,58 +2,56 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiSave, FiAward, FiFileText, FiUser, 
-  FiGithub, FiCpu, FiUploadCloud, FiBriefcase 
+  FiCpu, FiUploadCloud, FiBriefcase, FiX 
 } from 'react-icons/fi';
-import { FiUploadCloud as FiUploadCloudSolid } from 'react-icons/fi';
 
 const StudentIdentity = () => {
   const navigate = useNavigate();
 
-  // 1. STATE MANAGEMENT
+  // 1. CONFIGURATION
+  const MAX_FILE_SIZE_MB = 2; 
+  const MAX_SIZE_BYTES =  2 * 1024 * 1024;
+
+  // 2. STATE MANAGEMENT
   const [formData, setFormData] = useState({
-    firstName: '', lastName: '', regNo: '',
-    cgpa: '', github: '', skills: '', summary: ''
+    firstName: '', regNo: '', cgpa: '', skills: ''
   });
   
   const [resumeFile, setResumeFile] = useState(null);
 
-  // 2. TEXT INPUT LOGIC
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 3. FILE UPLOAD LOGIC (REDUCED LIMIT)
+  // 3. FILE LOGIC
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     
-    // REDUCED SIZE: Change '2' to '1' if you want a 1MB limit
-    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
-
     if (file) {
       if (file.type !== "application/pdf") {
         alert("Invalid file type. Please upload a PDF.");
-        e.target.value = null;
-        setResumeFile(null);
+        resetFileInput(); 
         return;
       }
 
-      if (file.size < maxSize) {
-        // Updated alert message to match the new limit
-        alert("File is too large! Please upload a resume below 2MB.");
-        e.target.value = null;
-        setResumeFile(null);
+      if (file.size > MAX_SIZE_BYTES) {
+        alert(`File is too large! Please upload a resume below ${MAX_FILE_SIZE_MB}MB.`);
+        resetFileInput();
       } else {
         setResumeFile(file);
       }
     }
   };
 
+  // Improved reset logic to handle both manual remove and input errors
+  const resetFileInput = () => {
+    const fileInput = document.getElementById('resume');
+    if (fileInput) fileInput.value = ""; // Clear the actual input value
+    setResumeFile(null);
+  };
 
-
-  // 4. NAVIGATION LOGIC (THE "MOVE")
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Pushes data to the next page
     navigate('/view-profile', { 
       state: { 
         studentData: formData,
@@ -80,7 +78,6 @@ const StudentIdentity = () => {
     inputGroup: { marginBottom: '20px', position: 'relative' },
     label: { display: 'block', color: colors.textMuted, marginBottom: '8px', fontSize: '0.85rem', fontWeight: '600' },
     input: { width: '100%', backgroundColor: colors.inputBg, border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', padding: '12px 15px 12px 45px', color: '#fff', outline: 'none' },
-    textarea: { width: '100%', backgroundColor: colors.inputBg, border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', padding: '12px 15px', color: '#fff', minHeight: '100px', outline: 'none' },
     icon: { position: 'absolute', left: '15px', top: '38px', color: colors.sky, fontSize: '1.1rem' },
     btnSave: { background: `linear-gradient(90deg, ${colors.sky}, ${colors.pink})`, border: 'none', borderRadius: '14px', padding: '16px 30px', color: '#fff', fontWeight: '800', width: '100%', marginTop: '30px', cursor: 'pointer' }
   };
@@ -121,7 +118,7 @@ const StudentIdentity = () => {
             <input type="text" name="skills" placeholder="React, Java, SQL..." style={styles.input} onChange={handleChange} />
           </div>
 
-          {/* DYNAMIC RESUME UPLOAD SECTION */}
+          {/* RESUME UPLOAD */}
           <div style={styles.sectionTitle}><FiUploadCloud /> Resume Upload</div>
           <div style={{
             border: resumeFile ? '2px solid #22c55e' : '2px dashed rgba(14, 165, 233, 0.3)',
@@ -138,13 +135,22 @@ const StudentIdentity = () => {
             )}
 
             <p style={{fontSize: '0.85rem', marginBottom: '5px', color: resumeFile ? '#22c55e' : colors.textMain}}>
-              {resumeFile ? `Successfully Selected: ${resumeFile.name}` : "Upload PDF Resume (Below 5MB)"}
+              {resumeFile ? `Selected: ${resumeFile.name}` : `Upload PDF Resume (Max ${MAX_FILE_SIZE_MB}MB)`}
             </p>
 
             <input type="file" id="resume" accept=".pdf" hidden onChange={handleFileChange} />
-            <label htmlFor="resume" className={`btn btn-sm rounded-pill px-4 mt-1 ${resumeFile ? 'btn-success' : 'btn-outline-info'}`} style={{cursor: 'pointer'}}>
-              {resumeFile ? "Change File" : "Browse Files"}
-            </label>
+            
+            <div className="d-flex justify-content-center gap-2 mt-2">
+                <label htmlFor="resume" className={`btn btn-sm rounded-pill px-4 ${resumeFile ? 'btn-success' : 'btn-outline-info'}`} style={{cursor: 'pointer'}}>
+                    {resumeFile ? "Change File" : "Browse Files"}
+                </label>
+                
+                {resumeFile && (
+                    <button type="button" onClick={resetFileInput} className="btn btn-sm btn-outline-danger rounded-pill px-3">
+                        <FiX /> Remove
+                    </button>
+                )}
+            </div>
           </div>
 
           <button type="submit" style={styles.btnSave}>
