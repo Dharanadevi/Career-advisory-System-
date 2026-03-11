@@ -1,76 +1,126 @@
-/* 1. The Global Canvas */
+/* 1. Variables & Global Theming */
+:root {
+  /* Dark Mode (Default) */
+  --bg-main: #020617;
+  --bg-gradient: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9), #020617);
+  --bg-card: rgba(30, 41, 59, 0.6);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-sky: #0ea5e9;
+  --accent-purple: #d946ef;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --nav-bg: rgba(15, 23, 42, 0.8);
+}
+
+/* Light Mode Override */
+body.light-mode {
+  --bg-main: #f1f5f9;
+  --bg-gradient: radial-gradient(circle at 50% 50%, #f8fafc, #e2e8f0);
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --accent-sky: #0284c7;
+  --accent-purple: #c026d3;
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --nav-bg: rgba(255, 255, 255, 0.9);
+}
+
+/* 2. The Global Canvas */
 body {
-  margin: 0; /* Changed from 100px to 0 to prevent white gaps at edges */
+  margin: 0;
   padding: 0;
-  /* Dark Midnight Background with a subtle tech pattern overlay */
-  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9), #020617), 
+  background: var(--bg-gradient), 
               url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-  
   background-attachment: fixed;
   min-height: 100vh;
-  /* Switched to Sans-Serif for a modern tech feel */
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  color: #f8fafc;
+  color: var(--text-main);
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* 2. Transparent App Container */
+/* 3. Layout & Navbar */
 .App {
   background: transparent;
-  padding-top: 80px; /* Space for your navbar */
+  padding-top: 80px; 
 }
 
-/* 3. The "Cyber-Glass" Card */
-.card {
-  /* Dark translucent background */
-  background: rgba(30, 41, 59, 0.7) !important; 
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  
-  /* Thin, glowing border */
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  border-radius: 24px; /* Smoother, rounder corners */
+.navbar {
+  background: var(--nav-bg) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* 4. The "Ultimate Glass" Card */
+.glass-card {
+  background: var(--bg-card) !important; 
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border-radius: 28px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: var(--text-main);
 }
 
-.card:hover {
-  transform: translateY(-10px);
-  /* Glow matches your Sky Blue branding */
-  border-color: #0ea5e9 !important;
-  box-shadow: 0 0 25px rgba(14, 165, 233, 0.2);
+.glass-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  border-color: var(--accent-sky) !important;
+  box-shadow: 0 20px 30px rgba(14, 165, 233, 0.15);
 }
 
-/* 4. Professional Modern Buttons */
-.btn-outline-dark {
-  border: 2px solid #0ea5e9 !important; /* Sky Blue Border */
-  color: #0ea5e9 !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: 12px;
-  padding: 10px 24px;
-  background: transparent;
-  transition: all 0.3s ease;
-}
-
-.btn-outline-dark:hover {
-  /* Smooth transition to your Purple/Pink theme */
-  background: linear-gradient(90deg, #0ea5e9, #d946ef) !important;
-  color: #fff !important;
-  border-color: transparent !important;
-  box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
-  transform: scale(1.05);
-}
-
-/* 5. Input Field Polish */
-input, select, textarea {
-  background: rgba(15, 23, 42, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* 5. Animated Buttons */
+.btn-primary-glow {
+  background: linear-gradient(135deg, var(--accent-sky), var(--accent-purple)) !important;
+  border: none !important;
   color: white !important;
-  border-radius: 10px !important;
+  font-weight: 700;
+  border-radius: 14px;
+  padding: 12px 30px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+}
+
+.btn-primary-glow:hover {
+  box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* 6. Form Polish */
+input, select, textarea {
+  background: rgba(15, 23, 42, 0.3) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+}
+
+body.light-mode input {
+  background: rgba(255, 255, 255, 0.5) !important;
 }
 
 input:focus {
-  border-color: #d946ef !important; /* Purple focus glow */
-  box-shadow: 0 0 10px rgba(217, 70, 239, 0.2) !important;
+  border-color: var(--accent-sky) !important;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1) !important;
+  outline: none;
+}
+
+/* 7. Animations */
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-element {
+  animation: floating 5s ease-in-out infinite;
+}
+
+.bg-glow-spot {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
 }

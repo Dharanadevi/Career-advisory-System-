@@ -1,79 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiLogOut, FiHome, FiUserPlus, FiLogIn, FiArrowLeft } from 'react-icons/fi';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiLogOut, FiUser, FiZap } from 'react-icons/fi';
 
 const Navbar = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const isLoginPage = location.pathname.includes('/login');
-  const isDashboard = location.pathname.includes('dashboard');
+  const isAuthenticated = !!localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
 
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
   };
 
-  const styles = {
-    nav: {
-      // Midnight dark background
-      backgroundColor: scrolled ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.8)', 
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      transition: 'all 0.4s ease',
-      padding: scrolled ? '10px 0' : '18px 0',
-    },
-    brand: {
-      fontSize: '1.6rem',
-      fontWeight: '900',
-      textDecoration: 'none',
-      letterSpacing: '1px',
-      textTransform: 'uppercase'
-    },
-    // Your custom colors
-    placeText: {
-      color: '#0ea5e9', // Sky Blue
-    },
-    meText: {
-      color: '#d946ef', // Vibrant Pink/Purple
-      textShadow: scrolled ? 'none' : '0 0 10px rgba(217, 70, 239, 0.5)'
-    },
-    btnMain: {
-      backgroundColor: '#0ea5e9',
-      color: '#ffffff',
-      border: 'none',
-      borderRadius: '12px',
-      padding: '8px 22px',
-      fontWeight: '700',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)'
-    },
-    btnGhost: {
-      color: '#f8fafc',
-      textDecoration: 'none',
-      fontWeight: '600',
-      padding: '8px 16px',
-      borderRadius: '10px',
-      transition: '0.3s'
-    }
-  };
-
   return (
-    <nav className="navbar navbar-expand-lg fixed-top" style={styles.nav}>
+    <nav className="navbar navbar-expand-lg fixed-top" style={{ 
+      background: 'rgba(15, 23, 42, 0.8)', 
+      backdropFilter: 'blur(12px)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+      padding: '15px 0'
+    }}>
       <div className="container">
-        <Link className="d-flex align-items-center" to="/" style={styles.brand}>
-          <FiHome className="me-2" style={{color: '#0ea5e9'}} />
-          <span style={styles.placeText}>PLACE</span>
-          <span style={styles.meText}>ME</span>
+        {/* Brand Logo */}
+        <Link className="navbar-brand fw-bold d-flex align-items-center" to="/" style={{ fontSize: '1.5rem' }}>
+          <FiZap className="me-2" color="#0ea5e9" />
+          <span style={{ color: '#ec2d9c' }}>Place</span>
+          <br></br>
+          <span style={{ color: '#2eb2e1' }}>ME</span>
         </Link>
 
         <button className="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -81,42 +33,47 @@ const Navbar = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto align-items-center gap-3 mt-lg-0 mt-3">
-            
-            {isDashboard ? (
-              <li className="nav-item">
-                <button onClick={handleLogout} className="btn d-flex align-items-center gap-2" style={styles.btnMain}>
-                  <FiLogOut /> Logout
-                </button>
-              </li>
-            ) : isLoginPage ? (
-              <li className="nav-item">
-                <Link to="/" className="d-flex align-items-center gap-2" style={styles.btnGhost}>
-                  <FiArrowLeft /> Back
-                </Link>
-              </li>
-            ) : (
+          <ul className="navbar-nav ms-auto align-items-center gap-2">
+            {!isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <Link to="/register" style={styles.btnGhost} 
-                    onMouseEnter={(e) => e.target.style.color = '#d946ef'}
-                    onMouseLeave={(e) => e.target.style.color = '#f8fafc'}>
-                    <FiUserPlus className="me-1" /> Register
-                  </Link>
+                  <Link className="nav-link text-white opacity-75-hover px-3" to="/">Home</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/login/student" className="d-flex align-items-center gap-2" style={styles.btnMain}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#d946ef'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#0ea5e9'}>
-                    <FiLogIn size={18} /> Sign In
+                  <Link className="nav-link btn-primary-glow ms-lg-3 px-4 py-2" to="/register" style={{ borderRadius: '10px', fontSize: '0.9rem' }}>
+                    Register
                   </Link>
                 </li>
               </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link text-white-50 small me-3">
+                    Logged in as <strong className="text-white">{userRole}</strong>
+                  </span>
+                </li>
+                <li className="nav-item">
+                  <button onClick={handleLogout} className="btn btn-outline-danger d-flex align-items-center gap-2" style={{ borderRadius: '10px' }}>
+                    <FiLogOut size={18} /> Logout
+                  </button>
+                </li>
+              </>
             )}
-
           </ul>
         </div>
       </div>
+
+      <style>{`
+        .opacity-75-hover { 
+          transition: all 0.3s ease; 
+          font-weight: 500;
+        }
+        .opacity-75-hover:hover { 
+          opacity: 1 !important; 
+          color: #9e298a !important;
+          transform: translateY(-2px);
+        }
+      `}</style>
     </nav>
   );
 };

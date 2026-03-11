@@ -1,113 +1,94 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// FIX: Removed 'UserInfo' (doesn't exist) and 'Briefcase' (unused)
-import { UserPlus, ArrowLeft } from 'lucide-react'; 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css';
+import { FiUser, FiMail, FiLock, FiArrowRight, FiBriefcase, FiShield } from 'react-icons/fi';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [role, setRole] = useState('student');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'student'
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Registering:", formData);
-    localStorage.setItem('user', JSON.stringify(formData));
-    
-    // Redirect logic
-    if (formData.role === 'staff') {
-      navigate('/staff-dashboard');
-    } else {
-      navigate('/student-dashboard');
-    }
-  };
-
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center py-5">
-      <div className="card shadow-lg border-0 rounded-4" style={{ width: '100%', maxWidth: '450px' }}>
-        <div className="card-body p-5">
-          
-          <button onClick={() => navigate('/')} className="btn btn-link text-decoration-none p-0 mb-4 d-flex align-items-center gap-1">
-            <ArrowLeft size={16} /> Back to Home
+    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '100px 20px' }}>
+      {/* Background Glow */}
+      <div className="bg-glow-spot" style={{ bottom: '10%', right: '10%', opacity: 0.4 }}></div>
+      
+      <div className="glass-card p-5 shadow-2xl" style={{ maxWidth: '550px', width: '100%', zIndex: 2 }}>
+        <div className="text-center mb-5">
+          <h2 className="fw-bold text-white mb-2">Create Account</h2>
+          <p className="small" style={{ color: '#cbd5e1' }}>Join the Career Portal and start your journey.</p>
+        </div>
+
+        {/* Role Selector Tabs */}
+        <div className="d-flex p-1 mb-5 rounded-4" style={{ background: 'rgb(195, 201, 203)', border: '1px solid var(--glass-border)' }}>
+          {['student', 'staff', 'admin'].map((r) => (
+            <button
+              key={r}
+              onClick={() => setRole(r)}
+              className={`flex-grow-1 py-2 rounded-3 border-0 transition-all ${role === r ? 'btn-primary-glow text-white' : 'text-muted bg-transparent'}`}
+              style={{ textTransform: 'capitalize', fontSize: '0.9rem', fontWeight: '600' }}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+
+        <form>
+          <div className="row">
+            <div className="col-md-12 mb-4">
+              <label className="small mb-2 text-white opacity-75">Full Name</label>
+              <div className="position-relative">
+                <FiUser className="position-absolute mt-3 ms-3 text-muted" />
+                <input type="text" name="name" className="form-control ps-5" placeholder="Dharanadevi" onChange={handleChange} />
+              </div>
+            </div>
+
+            <div className="col-md-12 mb-4">
+              <label className="small mb-2 text-white opacity-75">Email Address</label>
+              <div className="position-relative">
+                <FiMail className="position-absolute mt-3 ms-3 text-muted" />
+                <input type="email" name="email" className="form-control ps-5" placeholder="name@university.edu" onChange={handleChange} />
+              </div>
+            </div>
+
+            <div className="col-md-6 mb-4">
+              <label className="small mb-2 text-white opacity-75">Password</label>
+              <div className="position-relative">
+                <FiLock className="position-absolute mt-3 ms-3 text-muted" />
+                <input type="password" name="password" className="form-control ps-5" placeholder="••••••••" onChange={handleChange} />
+              </div>
+            </div>
+
+            <div className="col-md-6 mb-5">
+              <label className="small mb-2 text-white opacity-75">Confirm Password</label>
+              <div className="position-relative">
+                <FiLock className="position-absolute mt-3 ms-3 text-muted" />
+                <input type="password" name="confirmPassword" className="form-control ps-5" placeholder="••••••••" onChange={handleChange} />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" className="btn-primary-glow w-100 py-3 border-0 fs-6 fw-bold mb-4">
+            Register as {role.charAt(0).toUpperCase() + role.slice(1)} <FiArrowRight className="ms-2" />
           </button>
 
-          <div className="text-center mb-4">
-            <div className="bg-primary text-white d-inline-block p-3 rounded-circle mb-3">
-              <UserPlus size={30} />
-            </div>
-            <h2 className="fw-bold">Create Account</h2>
-            <p className="text-muted">Join the PlaceMe Portal</p>
+          <div className="text-center">
+            <p className="small" style={{ color: '#cbd5e1' }}>
+              Already have an account?{' '}
+              <span onClick={() => navigate(`/login/${role}`)} style={{ color: '#ffffff', cursor: 'pointer', fontWeight: '700', textDecoration: 'underline' }}>
+                Sign In
+              </span>
+            </p>
           </div>
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Full Name</label>
-              <input 
-                type="text" 
-                name="name"
-                className="form-control form-control-lg bg-light border-0 shadow-sm" 
-                placeholder="John Doe" 
-                required 
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Email Address</label>
-              <input 
-                type="email" 
-                name="email"
-                className="form-control form-control-lg bg-light border-0 shadow-sm" 
-                placeholder="name@example.com" 
-                required 
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Role</label>
-              <select 
-                name="role"
-                className="form-select form-select-lg bg-light border-0 shadow-sm"
-                onChange={handleChange}
-                value={formData.role}
-              >
-                <option value="student">Student</option>
-                <option value="staff">Staff</option>
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="form-label fw-semibold">Password</label>
-              <input 
-                type="password" 
-                name="password"
-                className="form-control form-control-lg bg-light border-0 shadow-sm" 
-                placeholder="••••••••" 
-                required 
-                onChange={handleChange}
-              />
-            </div>
-
-            <button type="submit" className="btn btn-primary btn-lg w-100 rounded-pill shadow-sm mb-3 py-3 fw-bold">
-              Sign Up
-            </button>
-          </form>
-
-          <div className="text-center mt-3">
-            <span className="text-muted">Already have an account? </span>
-            <button onClick={() => navigate('/')} className="btn btn-link p-0 fw-bold text-decoration-none">Login</button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );

@@ -13,14 +13,18 @@ import Register from './pages/Register';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
-// --- THE 3-STEP WORKFLOW PAGES ---
-import StudentIdentity from './pages/StudentIdentity'; 
-import ProfileView from './pages/ProfileView';         
+// --- THE 3-STEP WORKFLOW PAGES --- 
+import ViewProfile from './pages/ViewProfile';         
 import StudentDashboard from './pages/StudentDashboard'; 
 
 // 3. Global Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import StudentIdentity from './pages/StudentIdentity';
+
+
+
+// Sample Data for Testing
 
 const sampleUsers = [
   { id: 1, name: "Jane Smith", role: "Staff", email: "jane@company.com" },
@@ -46,22 +50,13 @@ function App() {
 
             {/* --- STUDENT WORKFLOW ROUTES --- */}
             
-            {/* 1. The Form */}
-            <Route 
-              path="/student-identity" 
-              element={
-                <ProtectedRoute allowedRole="student">
-                  <StudentIdentity />
-                </ProtectedRoute>
-              } 
-            />
 
-            {/* 2. The Display (MAKE SURE THIS PATH MATCHES YOUR navigate() CALL) */}
+            {/* 2. The Display (ViewProfile) */}
             <Route 
               path="/view-profile" 
               element={
                 <ProtectedRoute allowedRole="student">
-                  <ProfileView />
+                  <ViewProfile />
                 </ProtectedRoute>
               } 
             />

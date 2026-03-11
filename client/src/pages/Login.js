@@ -1,95 +1,103 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiLock, FiMail, FiCheckCircle, FiArrowRight } from 'react-icons/fi';
+import { FiMail, FiLock, FiArrowLeft, FiUser, FiBriefcase, FiShield } from 'react-icons/fi';
+
 
 const Login = () => {
-  // Default to student, but we expect 'admin' or 'student' from the URL
-  const { role = 'student' } = useParams();
+  const { role } = useParams(); 
   const navigate = useNavigate();
   
-  const [isSuccess, setIsSuccess] = useState(false);
+  
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const currentRole = {
+    student: { title: 'Student', icon: <FiUser />, color: '#0ea5e9' },
+    staff: { title: 'Staff', icon: <FiBriefcase />, color: '#a855f7' },
+    admin: { title: 'Admin', icon: <FiShield />, color: '#f43f5e' }
+  }[role] || { title: 'User', icon: <FiUser />, color: '#0ea5e9' };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     
-    // 1. Normalize the role (ensures 'Staff' becomes 'admin' if needed)
-    const assignedRole = role.toLowerCase() === 'staff' ? 'admin' : role.toLowerCase();
+    // 1. Update Global Auth State
+  
 
-    // 2. Save credentials to localStorage
-    // We save 'user' as an object so the Dashboard can parse it safely
-    localStorage.setItem('role', assignedRole);
-    localStorage.setItem('user', JSON.stringify({ 
-      email: email,
-      role: assignedRole,
-      loginTime: new Date().getTime()
-    }));
-    localStorage.setItem('token', 'mock_token_123');
-
-    setIsSuccess(true);
+    // 2. Direct to specific dashboard
+    if (role === 'student') navigate('/student-dashboard');
+    else if (role === 'staff') navigate('/staff-dashboard');
+    else if (role === 'admin') navigate('/admin-dashboard');
   };
 
   return (
-    <div className="login-container d-flex align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
-      <div className="login-glass-card p-5 shadow-lg text-center" style={{ borderRadius: '20px', background: 'white', maxWidth: '400px', width: '100%' }}>
-        
-        {!isSuccess ? (
-          <>
-            <div className="text-center mb-4">
-              {/* Badge turns Red for Admin, Blue for others */}
-              <div className={`badge mb-2 p-2 px-3 rounded-pill ${role.toLowerCase() === 'admin' ? 'bg-danger' : 'bg-primary'}`}>
-                {role.toUpperCase()}
-              </div>
-              <h2 className="fw-bold text-dark">Welcome Back</h2>
-              <p className="text-muted small">Enter your {role} credentials</p>
-            </div>
+    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      {/* Background Glow */}
+      <div className="bg-glow-spot" style={{ top: '20%', left: '50%', transform: 'translateX(-50%)', background: `radial-gradient(circle, ${currentRole.color}33 0%, transparent 70%)` }}></div>
+      
+      <div className="container" style={{ maxWidth: '450px', zIndex: 2 }}>
+        {/* Back Link - Pure White */}
+        <button onClick={() => navigate('/')} className="btn text-white mb-4 d-flex align-items-center gap-2 border-0 p-0 shadow-none opacity-100-hover">
+          <FiArrowLeft /> <span style={{ fontWeight: '500' }}>Back to Home</span>
+        </button>
 
-            <form onSubmit={handleLogin}>
-              <div className="mb-3 input-group">
-                <span className="input-group-text bg-light border-0">
-                  <FiMail className="text-muted" />
-                </span>
+        <div className="glass-card p-5 shadow-2xl">
+          <div className="text-center mb-5">
+            <div className="d-inline-block p-3 rounded-circle mb-3" style={{ backgroundColor: `${currentRole.color}22`, color: currentRole.color }}>
+              {React.cloneElement(currentRole.icon, { size: 32 })}
+            </div>
+            <h2 className="fw-bold text-white">{currentRole.title} Login</h2>
+            {/* High Contrast Description */}
+            <p className="small" style={{ color: '#ffffff', opacity: 0.8 }}>Career Portal Authentication</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4 text-start">
+              {/* White Label */}
+              <label className="small mb-2 text-white fw-bold">Email Address</label>
+              <div className="position-relative">
+                <FiMail className="position-absolute mt-3 ms-3 text-white opacity-50" />
                 <input 
                   type="email" 
-                  className="form-control bg-light border-0 shadow-none" 
-                  placeholder="Email Address" 
                   required 
-                  onChange={(e) => setEmail(e.target.value)}
+                  className="form-control ps-5 text-white bg-transparent border-secondary" 
+                  style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+                  placeholder="name@university.edu" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
                 />
               </div>
+            </div>
 
-              <div className="mb-4 input-group">
-                <span className="input-group-text bg-light border-0">
-                  <FiLock className="text-muted" />
-                </span>
+            <div className="mb-5 text-start">
+              {/* White Label */}
+              <label className="small mb-2 text-white fw-bold">Password</label>
+              <div className="position-relative">
+                <FiLock className="position-absolute mt-3 ms-3 text-white opacity-50" />
                 <input 
                   type="password" 
-                  className="form-control bg-light border-0 shadow-none" 
-                  placeholder="Password" 
                   required 
+                  className="form-control ps-5 text-white bg-transparent border-secondary" 
+                  style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+                  placeholder="••••••••" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
                 />
               </div>
+            </div>
 
-              <button type="submit" className="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow">
-                Login as {role.charAt(0).toUpperCase() + role.slice(1)}
-              </button>
-            </form>
-          </>
-        ) : (
-          <div className="animate__animated animate__zoomIn">
-            <FiCheckCircle size={60} className="text-success mb-3" />
-            <h2 className="fw-bold text-dark">Success!</h2>
-            <p className="text-muted mb-4">You are logged in as <strong>{role}</strong>.</p>
-            
-            <button 
-              onClick={() => navigate(`/${role.toLowerCase() === 'staff' ? 'admin' : role.toLowerCase()}-dashboard`)} 
-              className="btn btn-success btn-lg w-100 rounded-pill d-flex align-items-center justify-content-center gap-2"
-            >
-              Go to Dashboard <FiArrowRight />
+            <button type="submit" className="btn-primary-glow w-100 py-3 border-0 fs-6 fw-bold text-white">
+              Sign In to Dashboard
             </button>
-          </div>
-        )}
+          </form>
+        </div>
       </div>
+
+      <style>{`
+        .opacity-100-hover { opacity: 0.7; transition: 0.3s; }
+        .opacity-100-hover:hover { opacity: 1; }
+        .form-control::placeholder { color: rgba(255,255,255,0.4); }
+        .form-control:focus { background-color: rgba(255,255,255,0.05) !important; color: white !important; border-color: ${currentRole.color} !important; }
+      `}</style>
     </div>
   );
 };

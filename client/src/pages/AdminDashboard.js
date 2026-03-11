@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiGrid, FiUsers, FiBriefcase, FiTrendingUp, FiTrash2, FiActivity, 
-  FiClock, FiX, FiPlus, FiDownload, FiSearch, FiMail, FiStar 
-} from 'react-icons/fi';
+import { FiActivity, FiBriefcase, FiDownload, FiMail, FiStar, FiTrash2, FiUsers, FiGrid, FiX } from 'react-icons/fi';
+
+
 
 const AdminDashboard = () => {
   // --- 1. STATE MANAGEMENT ---

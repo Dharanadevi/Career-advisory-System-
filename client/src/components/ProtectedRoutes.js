@@ -4,27 +4,40 @@ import { Navigate, useLocation } from 'react-router-dom';
 const ProtectedRoute = ({ children, allowedRole }) => {
   const location = useLocation();
 
-  // 1. Get the role directly (since that's what we saved in Login.js)
-  const userRole = localStorage.getItem('role');
+  // 1. Retrieve and Clean the data
+  const rawRole = localStorage.getItem('role');
   const token = localStorage.getItem('token');
 
-  // 2. If no token or no role, they aren't logged in
+  // Helper to safely parse role in case it was stored with JSON.stringify
+  const getCleanRole = (role) => {
+    if (!role) return "";
+    try {
+      // If the role has extra quotes (from JSON.stringify), this removes them
+      return JSON.parse(role).toLowerCase();
+    } catch (e) {
+      // If it's just a normal string, just lowercase it
+      return role.toLowerCase();
+    }
+  };
+
+  const userRole = getCleanRole(rawRole);
+  const requiredRole = allowedRole ? allowedRole.toLowerCase() : "";
+
+  // 2. Authentication Check
   if (!token || !userRole) {
     console.warn("No session found. Redirecting to home.");
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // 3. Check for role mismatch
-  // We normalize both to lowercase to prevent "Student" vs "student" errors
-  const currentUserRole = userRole.toLowerCase();
-  const requiredRole = allowedRole.toLowerCase();
-
-  if (currentUserRole !== requiredRole) {
-    console.warn(`Access denied. Role: ${currentUserRole}, Required: ${requiredRole}`);
+  // 3. Role Authorization Check
+  if (userRole !== requiredRole) {
+    console.warn(`Access Denied. Have: [${userRole}], Need: [${requiredRole}]`);
+    
+    // Redirect to a neutral page if they are logged in but just in the wrong place
     return <Navigate to="/" replace />;
   }
 
-  // 4. If all checks pass, show the dashboard!
+  // 4. Authorized Access
   return children;
 };
 
