@@ -1,126 +1,155 @@
 /* 1. Variables & Global Theming */
 :root {
-  /* Dark Mode (Default) */
+  /* Dark Mode (High-Performance Tech Theme) */
   --bg-main: #020617;
-  --bg-gradient: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9), #020617);
-  --bg-card: rgba(30, 41, 59, 0.6);
-  --text-main: #f8fafc;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0, transparent 50%), 
+             radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.15) 0, transparent 50%);
+  --bg-card: rgba(15, 23, 42, 0.7);
+  --text-main: #ffffff;
   --text-muted: #94a3b8;
   --accent-sky: #0ea5e9;
-  --accent-purple: #d946ef;
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --nav-bg: rgba(15, 23, 42, 0.8);
+  --accent-purple: #6366f1;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --nav-bg: rgba(2, 6, 23, 0.8);
+  --input-bg: rgba(255, 255, 255, 0.03);
 }
 
-/* Light Mode Override */
+/* Light Mode Override (Premium Frosted Look) */
 body.light-mode {
-  --bg-main: #f1f5f9;
-  --bg-gradient: radial-gradient(circle at 50% 50%, #f8fafc, #e2e8f0);
-  --bg-card: rgba(255, 255, 255, 0.7);
-  --text-main: #1e293b;
+  --bg-main: #f8fafc;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.1) 0, transparent 50%), 
+             radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0, transparent 50%);
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --text-main: #0f172a;
   --text-muted: #64748b;
   --accent-sky: #0284c7;
-  --accent-purple: #c026d3;
-  --glass-border: rgba(0, 0, 0, 0.1);
-  --nav-bg: rgba(255, 255, 255, 0.9);
+  --accent-purple: #4f46e5;
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --nav-bg: rgba(248, 250, 252, 0.9);
+  --input-bg: rgba(15, 23, 42, 0.05);
 }
 
 /* 2. The Global Canvas */
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg-gradient), 
-              url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+  background-color: var(--bg-main);
+  background-image: var(--bg-mesh);
   background-attachment: fixed;
   min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   color: var(--text-main);
-  transition: background 0.5s ease, color 0.5s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
 }
 
 /* 3. Layout & Navbar */
 .App {
-  background: transparent;
   padding-top: 80px; 
+  animation: pageReveal 0.8s ease-out;
+}
+
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .navbar {
   background: var(--nav-bg) !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 2rem;
 }
 
-/* 4. The "Ultimate Glass" Card */
+/* 4. The "Hyper-Glass" Card */
 .glass-card {
   background: var(--bg-card) !important; 
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid var(--glass-border) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  border-radius: 28px;
+  border-radius: 35px;
+  box-shadow: 0 25px 80px -20px rgba(0, 0, 0, 0.6);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  color: var(--text-main);
 }
 
 .glass-card:hover {
-  transform: translateY(-12px) scale(1.02);
+  transform: translateY(-8px);
   border-color: var(--accent-sky) !important;
-  box-shadow: 0 20px 30px rgba(14, 165, 233, 0.15);
+  box-shadow: 0 30px 90px -15px rgba(14, 165, 233, 0.2);
 }
 
-/* 5. Animated Buttons */
+/* 5. Neon Buttons */
 .btn-primary-glow {
   background: linear-gradient(135deg, var(--accent-sky), var(--accent-purple)) !important;
   border: none !important;
   color: white !important;
   font-weight: 700;
-  border-radius: 14px;
-  padding: 12px 30px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 18px;
+  padding: 14px 32px;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
 }
 
 .btn-primary-glow:hover {
-  box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4);
-  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+  transform: translateY(-3px) scale(1.02);
   filter: brightness(1.1);
 }
 
-/* 6. Form Polish */
+/* 6. Form Polish & White Placeholder Fix */
 input, select, textarea {
-  background: rgba(15, 23, 42, 0.3) !important;
+  background: var(--input-bg) !important;
   border: 1px solid var(--glass-border) !important;
   color: var(--text-main) !important;
-  border-radius: 12px !important;
-  padding: 12px !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  transition: 0.3s ease;
 }
 
-body.light-mode input {
-  background: rgba(255, 255, 255, 0.5) !important;
+/* THE KEY FIX: PURE WHITE PLACEHOLDERS */
+input::placeholder, textarea::placeholder {
+  color: #ffffff !important;
+  opacity: 0.8 !important;
+  font-weight: 300;
+}
+
+body.light-mode input::placeholder {
+  color: #1e293b !important;
+  opacity: 0.6 !important;
 }
 
 input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
   border-color: var(--accent-sky) !important;
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1) !important;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.2) !important;
   outline: none;
 }
 
-/* 7. Animations */
-@keyframes floating {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
+/* 7. New: Floating Action Elements */
 .floating-element {
-  animation: floating 5s ease-in-out infinite;
+  animation: floating 6s ease-in-out infinite;
 }
 
-.bg-glow-spot {
-  position: fixed;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
-  z-index: -1;
-  pointer-events: none;
+@keyframes floating {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+/* Custom Scrollbar for Luxury Feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--accent-sky), var(--accent-purple));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-sky);
 }

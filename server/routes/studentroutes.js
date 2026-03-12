@@ -5,27 +5,26 @@ const multer = require('multer');
 const path = require('path');
 
 // --- 1. STUDENT SCHEMA ---
-// We keep this in the same file for now, or you can move it to models/Student.js
 const studentSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true }, // Added Email to link with login
   regNo: { type: String, required: true, unique: true },
   cgpa: { type: Number, required: true },
   skills: { type: String },
   github: { type: String },
-  resumePath: { type: String }, // Stores the path to the uploaded PDF
+  resumePath: { type: String }, 
   updatedAt: { type: Date, default: Date.now }
 });
 
 const Student = mongoose.models.Student || mongoose.model('Student', studentSchema);
 
-// --- 2. MULTER CONFIGURATION (RESUME STORAGE) ---
+// --- 2. MULTER CONFIGURATION ---
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/resumes/'); // Make sure this folder exists in your backend root!
+    cb(null, 'uploads/resumes/'); 
   },
   filename: (req, file, cb) => {
-    // Saves file as: 22CS01-1710000000.pdf
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
@@ -33,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // STRICT 5MB LIMIT
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     if (file.mimetype === "application/pdf") {
       cb(null, true);
@@ -44,12 +43,11 @@ const upload = multer({
 });
 
 // --- 3. THE "SAVE CAREER IDENTITY" ROUTE ---
-// Uses 'upload.single' to catch the "resume" file from your FormData
 router.post('/update-identity', upload.single('resume'), async (req, res) => {
   try {
-    const { firstName, lastName, regNo, cgpa, github, skills } = req.body;
+    // Make sure 'email' is sent from the frontend form
+    const { firstName, lastName, regNo, cgpa, github, skills, email } = req.body;
 
-    // Build the data object
     const studentData = {
       firstName,
       lastName,
@@ -57,18 +55,17 @@ router.post('/update-identity', upload.single('resume'), async (req, res) => {
       cgpa,
       github,
       skills,
+      email, // Save email to identify the user later
       updatedAt: Date.now()
     };
 
-    // If a file was uploaded, add its path to the database
     if (req.file) {
       studentData.resumePath = req.file.path;
     }
 
-    // findOneAndUpdate with upsert: true will create a new profile 
-    // OR update the existing one if the regNo matches.
+    // We use email as the primary key to find the profile
     const updatedProfile = await Student.findOneAndUpdate(
-      { regNo: regNo },
+      { email: email }, 
       studentData,
       { upsert: true, new: true }
     );
@@ -79,12 +76,24 @@ router.post('/update-identity', upload.single('resume'), async (req, res) => {
       profile: updatedProfile
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// Keep your existing Job routes below if you still need them...
-// (GET /all, POST /add, etc.)
+// --- 4. NEW: FETCH PROFILE BY EMAIL (FOR DASHBOARD) ---
+router.get('/profile/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const profile = await Student.findOne({ email: email });
+    
+    if (!profile) {
+      return res.status(404).json({ message: "No profile found" });
+    }
+    
+    res.status(200).json(profile);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
 
 module.exports = router;
